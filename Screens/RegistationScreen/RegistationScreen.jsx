@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  ImageBackground,
+  Image,
   TextInput,
   TouchableOpacity,
   Platform,
@@ -52,105 +52,112 @@ export const RegistationScreen = () => {
   };
   return (
     <TouchableWithoutFeedback onPress={handleKeyboadHide}>
-      <ImageBackground
-        style={styles.image}
-        source={require("../../assets/images/Photo.jpg")}
-      >
-        <View style={styles.container}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/Photo.jpg")}
+        />
+
+        <KeyboardAvoidingView
+          style={{ flex: 1, justifyContent: "flex-end" }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          <View
+            style={{
+              ...styles.form,
+              paddingBottom: isKeyboard ? 30 : 38,
+            }}
           >
-            <View
-              style={{
-                ...styles.form,
-                paddingBottom: isKeyboard ? 12 : 38,
-              }}
-            >
-              <Text style={styles.text}> Registration</Text>
-              <View>
-                <TextInput
-                  style={{ ...styles.input, width: dimentions }}
-                  textAlign="center"
-                  placeholder="Login"
-                  value={formData.login}
-                  onFocus={handleChangeKeyboardFlag}
-                  onBlur={handle}
-                  onChangeText={(value) =>
-                    setFormData((prevState) => ({ ...prevState, login: value }))
-                  }
-                />
-              </View>
-              <View style={{ marginTop: 16 }}>
-                <TextInput
-                  style={{ ...styles.input, width: dimentions }}
-                  textAlign="center"
-                  placeholder="Email"
-                  value={formData.email}
-                  onFocus={handleChangeKeyboardFlag}
-                  onBlur={handle}
-                  onChangeText={(value) =>
-                    setFormData((prevState) => ({ ...prevState, email: value }))
-                  }
-                />
-              </View>
-              <View style={{ marginTop: 16 }}>
-                <TextInput
-                  style={{ ...styles.input, width: dimentions }}
-                  textAlign="center"
-                  placeholder="Password"
-                  secureTextEntry={true}
-                  value={formData.password}
-                  onFocus={handleChangeKeyboardFlag}
-                  onBlur={handle}
-                  onChangeText={(value) =>
-                    setFormData((prevState) => ({
-                      ...prevState,
-                      password: value,
-                    }))
-                  }
-                />
-              </View>
-              {!isKeyboard && (
-                <>
-                  <TouchableOpacity
-                    style={{ ...styles.btn, width: dimentions }}
-                    activeOpacity={0.7}
-                    onPress={handleSubmit}
-                  >
-                    <Text style={styles.btnText}>Register</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.textInfo}>
-                    Have account alrady? Sign in
-                  </Text>
-                </>
-              )}
+            <Text style={styles.text}> Registration</Text>
+            <View>
+              <TextInput
+                style={{ ...styles.input, width: dimentions }}
+                textAlign="center"
+                placeholder="Login"
+                value={formData.login}
+                onFocus={handleChangeKeyboardFlag}
+                onBlur={handle}
+                onChangeText={(value) =>
+                  setFormData((prevState) => ({ ...prevState, login: value }))
+                }
+              />
             </View>
-          </KeyboardAvoidingView>
-        </View>
-      </ImageBackground>
+            <View style={{ marginTop: 16 }}>
+              <TextInput
+                style={{ ...styles.input, width: dimentions }}
+                textAlign="center"
+                placeholder="Email"
+                value={formData.email}
+                onFocus={handleChangeKeyboardFlag}
+                onBlur={handle}
+                onChangeText={(value) =>
+                  setFormData((prevState) => ({ ...prevState, email: value }))
+                }
+              />
+            </View>
+            <View style={{ marginTop: 16 }}>
+              <TextInput
+                style={{ ...styles.input, width: dimentions }}
+                textAlign="center"
+                placeholder="Password"
+                secureTextEntry={true}
+                value={formData.password}
+                onFocus={handleChangeKeyboardFlag}
+                onBlur={handle}
+                onChangeText={(value) =>
+                  setFormData((prevState) => ({
+                    ...prevState,
+                    password: value,
+                  }))
+                }
+              />
+            </View>
+            {!isKeyboard && (
+              <>
+                <TouchableOpacity
+                  style={{ ...styles.btn, width: dimentions }}
+                  activeOpacity={0.7}
+                  onPress={handleSubmit}
+                >
+                  <Text style={styles.btnText}>Register</Text>
+                </TouchableOpacity>
+                <Text style={styles.textInfo}>
+                  Have account alrady? Sign in
+                </Text>
+              </>
+            )}
+            <View style={styles.imgWrapper}>
+              <TouchableOpacity
+                style={styles.addPhotoButton}
+                activeOpacity={0.7}
+              >
+                <Text style={styles.addPhotoButtonText}>+</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </View>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // backgroundColor: "#fff",
-    backgroundColor: "transparent",
+    flex: 1,
+    backgroundColor: "#fff",
   },
 
   image: {
-    flex: 1,
-
-    justifyContent: "flex-end",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
     resizeMode: "cover",
-    // alignItems: "center",
   },
   form: {
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
-    paddingTop: 52,
-    // marginHorizontal: 16,
+    paddingTop: 62,
     backgroundColor: "#FFFFFF",
   },
   text: {
@@ -188,5 +195,31 @@ const styles = StyleSheet.create({
     fontWeight: "Medium",
     textAlign: "center",
     marginTop: 16,
+  },
+  imgWrapper: {
+    width: 120,
+    height: 120,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 16,
+    position: "absolute",
+    left: "50%",
+    top: "-4%",
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+  },
+  addPhotoButton: {
+    position: "absolute",
+    right: -12.5,
+    bottom: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 25,
+    height: 25,
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: "#FF6C00",
+  },
+
+  addPhotoButtonText: {
+    color: "#FF6C00",
   },
 });
