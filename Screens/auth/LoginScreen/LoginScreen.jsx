@@ -14,12 +14,11 @@ import {
 } from "react-native";
 
 const initialState = {
-  login: "",
   email: "",
   password: "",
 };
 
-export const RegistationScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [isKeyboard, setIsKeyboard] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [dimentions, setDimentions] = useState(
@@ -55,7 +54,7 @@ export const RegistationScreen = () => {
       <View style={styles.container}>
         <Image
           style={styles.image}
-          source={require("../../assets/images/Photo.jpg")}
+          source={require("../../../assets/images/Photo.jpg")}
         />
 
         <KeyboardAvoidingView
@@ -68,20 +67,8 @@ export const RegistationScreen = () => {
               paddingBottom: isKeyboard ? 30 : 38,
             }}
           >
-            <Text style={styles.text}> Registration</Text>
-            <View>
-              <TextInput
-                style={{ ...styles.input, width: dimentions }}
-                textAlign="center"
-                placeholder="Login"
-                value={formData.login}
-                onFocus={handleChangeKeyboardFlag}
-                onBlur={handle}
-                onChangeText={(value) =>
-                  setFormData((prevState) => ({ ...prevState, login: value }))
-                }
-              />
-            </View>
+            <Text style={styles.text}> Sign in</Text>
+
             <View style={{ marginTop: 16 }}>
               <TextInput
                 style={{ ...styles.input, width: dimentions }}
@@ -119,21 +106,17 @@ export const RegistationScreen = () => {
                   activeOpacity={0.7}
                   onPress={handleSubmit}
                 >
-                  <Text style={styles.btnText}>Register</Text>
+                  <Text style={styles.btnText}>Sign in</Text>
                 </TouchableOpacity>
-                <Text style={styles.textInfo}>
-                  Have account alrady? Sign in
-                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Register")}
+                >
+                  <Text style={styles.textInfo}>
+                    Don`t have account yet? <Text>Sign up</Text>
+                  </Text>
+                </TouchableOpacity>
               </>
             )}
-            <View style={styles.imgWrapper}>
-              <TouchableOpacity
-                style={styles.addPhotoButton}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.addPhotoButtonText}>+</Text>
-              </TouchableOpacity>
-            </View>
           </View>
         </KeyboardAvoidingView>
       </View>
@@ -195,31 +178,5 @@ const styles = StyleSheet.create({
     fontWeight: "Medium",
     textAlign: "center",
     marginTop: 16,
-  },
-  imgWrapper: {
-    width: 120,
-    height: 120,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-    position: "absolute",
-    left: "50%",
-    top: "-4%",
-    transform: [{ translateX: -50 }, { translateY: -50 }],
-  },
-  addPhotoButton: {
-    position: "absolute",
-    right: -12.5,
-    bottom: 14,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 25,
-    height: 25,
-    borderWidth: 1,
-    borderRadius: 50,
-    borderColor: "#FF6C00",
-  },
-
-  addPhotoButtonText: {
-    color: "#FF6C00",
   },
 });

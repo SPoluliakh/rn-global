@@ -1,13 +1,10 @@
 // import { StatusBar } from "expo-status-bar";
-import { RegistationScreen } from "./Screens/RegistationScreen/RegistationScreen";
-// import { LoginScreen } from "./Screens/LoginScreen/LoginScreen";
+
+import { NavigationContainer } from "@react-navigation/native";
+
+import { useRout } from "./Router";
 
 export default function App() {
-  return (
-    <>
-      <RegistationScreen />
-      {/* <LoginScreen /> */}
-      {/* <StatusBar style="auto" /> */}
-    </>
-  );
+  const routing = useRout({});
+  return <NavigationContainer>{routing}</NavigationContainer>;
 }
