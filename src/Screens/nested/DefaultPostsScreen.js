@@ -28,7 +28,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
         <View style={styles.avatarContainer}>
           <Image
             style={styles.avatar}
-            source={require("../../assets/images/profile.jpg")}
+            source={require("../../../assets/images/profile.jpg")}
           />
         </View>
 

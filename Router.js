@@ -1,17 +1,11 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-  Fontisto,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
-import { RegistationScreen } from "./Screens/auth/RegistationScreen/RegistationScreen";
-import { LoginScreen } from "./Screens/auth/LoginScreen/LoginScreen";
-import { PostsScreen } from "./Screens/main/PostsScreen";
-import { CreateScreen } from "./Screens/main/CreateScreen";
-import { ProfileScreen } from "./Screens/main/ProfileScreen";
+import { MaterialCommunityIcons, Ionicons, Fontisto } from "@expo/vector-icons";
+import { RegistationScreen } from "./src/Screens/auth/RegistationScreen/RegistationScreen";
+import { LoginScreen } from "./src/Screens/auth/LoginScreen/LoginScreen";
+import { PostsScreen } from "./src/Screens/main/PostsScreen";
+import { CreateScreen } from "./src/Screens/main/CreateScreen";
+import { ProfileScreen } from "./src/Screens/main/ProfileScreen";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
@@ -38,20 +32,6 @@ export const useRout = (isAuth) => {
       <MainTab.Screen
         options={{
           headerShown: false,
-          // headerTitleStyle: {
-          //   fontWeight: "bold",
-          //   fontSize: 18,
-          //   color: "#333",
-          // },
-          // headerTitleAlign: "center",
-          // headerRight: () => (
-          //   <TouchableOpacity
-          //     style={{ marginRight: 20 }}
-          //     onPress={() => navigation.navigate("Login")}
-          //   >
-          //     <MaterialIcons name="logout" size={24} color="#BDBDBD" />
-          //   </TouchableOpacity>
-          // ),
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons
               name="postage-stamp"
