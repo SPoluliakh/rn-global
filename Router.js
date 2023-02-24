@@ -6,6 +6,7 @@ import {
   Fontisto,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
 import { RegistationScreen } from "./Screens/auth/RegistationScreen/RegistationScreen";
 import { LoginScreen } from "./Screens/auth/LoginScreen/LoginScreen";
 import { PostsScreen } from "./Screens/main/PostsScreen";
@@ -36,23 +37,21 @@ export const useRout = (isAuth) => {
     <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
       <MainTab.Screen
         options={{
-          headerTitleStyle: {
-            fontWeight: "bold",
-            fontSize: 18,
-            color: "#333",
-          },
-          headerTitleAlign: "center",
-          headerRight: () => (
-            <MaterialIcons
-              onPress={() => console.log("Exit button was clicked!")}
-              name="logout"
-              size={24}
-              color="#BDBDBD"
-              style={{
-                marginRight: 12,
-              }}
-            />
-          ),
+          headerShown: false,
+          // headerTitleStyle: {
+          //   fontWeight: "bold",
+          //   fontSize: 18,
+          //   color: "#333",
+          // },
+          // headerTitleAlign: "center",
+          // headerRight: () => (
+          //   <TouchableOpacity
+          //     style={{ marginRight: 20 }}
+          //     onPress={() => navigation.navigate("Login")}
+          //   >
+          //     <MaterialIcons name="logout" size={24} color="#BDBDBD" />
+          //   </TouchableOpacity>
+          // ),
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialCommunityIcons
               name="postage-stamp"
