@@ -8,15 +8,20 @@ import {
   Text,
 } from "react-native";
 import { SimpleLineIcons, FontAwesome } from "@expo/vector-icons";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase/config";
 
-export const DefaultPostsScreen = ({ route, navigation }) => {
+export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    const getAllPosts = async () => {
+      onSnapshot(collection(db, "posts"), (data) => {
+        setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      });
+    };
+    getAllPosts();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -42,17 +47,24 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={({ item }) => (
           <View>
-            <Image style={styles.postPhoto} source={{ uri: item.post.photo }} />
-            <Text style={styles.postTitle}>{item.post.title}</Text>
+            <Image style={styles.postPhoto} source={{ uri: item.photo }} />
+            <Text style={styles.postTitle}>{item.title}</Text>
             <View style={styles.postInfoContainer}>
               <View style={styles.postInfoInnerContainer}>
                 <TouchableOpacity
                   style={{ ...styles.postComments, marginRight: 25 }}
                   activeOpacity={0.6}
-                  onPress={() => navigation.navigate("Comments")}
+                  onPress={() =>
+                    navigation.navigate("Comments", {
+                      postId: item.id,
+                      photo: item.photo,
+                    })
+                  }
                 >
                   <FontAwesome name="comment-o" size={24} color="#BDBDBD" />
-                  <Text style={styles.numberComments}>0</Text>
+                  <Text style={styles.numberComments}>
+                    {item.comments ?? 0}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
@@ -61,10 +73,10 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                 onPress={() =>
                   navigation.navigate("Map", {
                     coords: {
-                      latitude: item.post.location.coords.latitude,
-                      longitude: item.post.location.coords.longitude,
+                      latitude: item.location.coords.latitude,
+                      longitude: item.location.coords.longitude,
                     },
-                    place: item.post.place,
+                    place: item.place,
                   })
                 }
               >
@@ -73,7 +85,7 @@ export const DefaultPostsScreen = ({ route, navigation }) => {
                   size={24}
                   color="#BDBDBD"
                 />
-                <Text style={styles.locationText}>{item.post.place}</Text>
+                <Text style={styles.locationText}>{item.place}</Text>
               </TouchableOpacity>
             </View>
           </View>

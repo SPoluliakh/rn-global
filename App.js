@@ -1,10 +1,11 @@
-// import { StatusBar } from "expo-status-bar";
-
-import { NavigationContainer } from "@react-navigation/native";
-
-import { useRout } from "./Router";
+import { Provider } from "react-redux";
+import { store } from "./src/redux/store";
+import { Main } from "./src/components/Main";
 
 export default function App() {
-  const routing = useRout({});
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <Provider store={store}>
+      <Main />
+    </Provider>
+  );
 }

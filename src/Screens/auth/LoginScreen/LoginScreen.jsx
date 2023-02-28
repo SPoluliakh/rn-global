@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authLogin } from "../../../redux/auth/authOperations";
 
 const initialState = {
   email: "",
@@ -24,19 +26,20 @@ export const LoginScreen = ({ navigation }) => {
   const [dimentions, setDimentions] = useState(
     () => Dimensions.get("window").width - 20 * 2
   );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const countWidchChange = () => {
-      const width = Dimensions.get("window").width;
+      const width = Dimensions?.get("window").width;
       setDimentions(width - 20 * 2);
     };
-    Dimensions.addEventListener("change", countWidchChange);
+    Dimensions?.addEventListener("change", countWidchChange);
 
-    return () => Dimensions.removeEventListener("change", countWidchChange);
+    return () => Dimensions?.removeEventListener("change", countWidchChange);
   }, []);
 
   const handleSubmit = () => {
-    console.log(formData);
+    dispatch(authLogin(formData));
     setFormData(initialState);
   };
   const handleChangeKeyboardFlag = () => {

@@ -15,6 +15,10 @@ import { Entypo, Octicons, SimpleLineIcons, Feather } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import * as ImagePicker from "expo-image-picker";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { db, storage } from "../../firebase/config";
+import { useSelector } from "react-redux";
 
 const initialState = {
   title: "",
@@ -28,6 +32,8 @@ export const CreateScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [isKeyboard, setIsKeyboard] = useState(false);
 
+  const { userId, email, name, avatar } = useSelector((state) => state.auth);
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -35,8 +41,8 @@ export const CreateScreen = ({ navigation }) => {
         console.log("Permission to access location was denied");
         return;
       }
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      let locationRes = await Location.getCurrentPositionAsync({});
+      setLocation(locationRes);
     })();
   }, []);
 
@@ -58,18 +64,6 @@ export const CreateScreen = ({ navigation }) => {
     );
   };
 
-  const sendPost = () => {
-    const post = {
-      title: inputState.title,
-      photo,
-      place: inputState.location,
-      location,
-    };
-    navigation.navigate("DefaultPostsScreen", { post });
-    setInputState(initialState);
-    setPhoto(null);
-  };
-
   const addFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -85,6 +79,47 @@ export const CreateScreen = ({ navigation }) => {
   const deletePhoto = () => {
     setPhoto(null);
     setInputState(initialState);
+  };
+
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+    const file = await response.blob();
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `postImage/${uniquePostId}`);
+    await uploadBytes(storageRef, file);
+    const processedPhoto = await getDownloadURL(storageRef);
+    return processedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer();
+    try {
+      await addDoc(collection(db, "posts"), {
+        userId,
+        name,
+        email,
+        avatar,
+        photo,
+        title: inputState.title,
+        place: inputState.location,
+        location: location,
+      });
+    } catch (error) {
+      console.log("error", error.message);
+    }
+  };
+
+  const sendPost = () => {
+    uploadPostToServer();
+    const post = {
+      title: inputState.title,
+      photo,
+      place: inputState.location,
+      location,
+    };
+    navigation.navigate("DefaultPostsScreen", { post });
+    setInputState(initialState);
+    setPhoto(null);
   };
 
   return (

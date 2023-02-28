@@ -11,7 +11,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
+  ImageBackground,
 } from "react-native";
+import { useDispatch } from "react-redux";
+
+import { storage } from "../../../firebase/config";
+import * as ImagePicker from "expo-image-picker";
+import { MaterialIcons } from "@expo/vector-icons";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+import { register } from "../../../redux/auth/authOperations";
 
 const initialState = {
   login: "",
@@ -25,19 +34,22 @@ export const RegistationScreen = ({ navigation }) => {
   const [dimentions, setDimentions] = useState(
     () => Dimensions.get("window").width - 20 * 2
   );
+  const [avatar, setAvatar] = useState();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const countWidchChange = () => {
-      const width = Dimensions.get("window").width;
+      const width = Dimensions?.get("window").width;
       setDimentions(width - 20 * 2);
     };
-    Dimensions.addEventListener("change", countWidchChange);
+    Dimensions?.addEventListener("change", countWidchChange);
 
-    return () => Dimensions.removeEventListener("change", countWidchChange);
+    return () => Dimensions?.removeEventListener("change", countWidchChange);
   }, []);
 
   const handleSubmit = () => {
-    console.log(formData);
+    dispatch(register(formData));
     setFormData(initialState);
   };
   const handleChangeKeyboardFlag = () => {
@@ -49,6 +61,33 @@ export const RegistationScreen = ({ navigation }) => {
   };
   const handle = () => {
     setIsKeyboard(false);
+  };
+
+  const uploadAvatarToServer = async () => {
+    const response = await fetch(avatar);
+    console.log(avatar);
+    const file = await response.blob();
+    const avatarId = uuid.v4();
+    const storageRef = ref(storage, `avatar/${avatarId}`);
+    await uploadBytes(storageRef, file);
+    const avatarUrl = await getDownloadURL(ref(storage, `avatar/${avatarId}`));
+    return avatarUrl;
+  };
+
+  const uploadAvatar = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0,
+    });
+
+    if (!result.canceled) {
+      setAvatar(result.assets[0].uri);
+    }
+  };
+
+  const deleteAvatar = async () => {
+    setAvatar(null);
   };
   return (
     <TouchableWithoutFeedback onPress={handleKeyboadHide}>
@@ -129,12 +168,31 @@ export const RegistationScreen = ({ navigation }) => {
               </>
             )}
             <View style={styles.imgWrapper}>
-              <TouchableOpacity
-                style={styles.addPhotoButton}
-                activeOpacity={0.7}
+              <ImageBackground
+                style={styles.avatarPhoto}
+                source={require("../../../../assets/images/noavatar.jpg")}
               >
-                <Text style={styles.addPhotoButtonText}>+</Text>
-              </TouchableOpacity>
+                {avatar && (
+                  <Image style={styles.avatarPhoto} source={{ uri: avatar }} />
+                )}
+              </ImageBackground>
+
+              {avatar ? (
+                <TouchableOpacity
+                  style={{ ...styles.addPhotoButton, borderColor: "#BDBDBD" }}
+                  onPress={deleteAvatar}
+                >
+                  <MaterialIcons name="close" size={24} color="#BDBDBD" />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={styles.addPhotoButton}
+                  activeOpacity={0.7}
+                  onPress={uploadAvatar}
+                >
+                  <Text style={styles.addPhotoButtonText}>+</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
         </KeyboardAvoidingView>
@@ -203,10 +261,18 @@ const styles = StyleSheet.create({
     height: 120,
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
+
     position: "absolute",
     left: "50%",
     top: "-4%",
     transform: [{ translateX: -50 }, { translateY: -50 }],
+  },
+  avatarPhoto: {
+    width: 120,
+    height: 120,
+    resizeMode: "cover",
+    borderRadius: 50,
+    overflow: "hidden",
   },
   addPhotoButton: {
     position: "absolute",

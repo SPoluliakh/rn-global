@@ -46,6 +46,7 @@ export const useRout = (isAuth) => {
       />
       <MainTab.Screen
         options={{
+          headerShown: false,
           headerTitleStyle: {
             fontWeight: "bold",
             fontSize: 18,
