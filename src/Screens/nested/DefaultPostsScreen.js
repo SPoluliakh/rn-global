@@ -27,32 +27,32 @@ export const DefaultPostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.userContainer}
-        activeOpacity={0.7}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <View style={styles.avatarContainer}>
-          <Image
-            style={styles.avatar}
-            source={
-              avatar
-                ? { uri: avatar }
-                : require("../../../assets/images/noavatar.jpg")
-            }
-          />
-        </View>
-
-        <View>
-          <Text style={styles.userName}>{name}</Text>
-          <Text style={styles.userEmail}>{email}</Text>
-        </View>
-      </TouchableOpacity>
       <FlatList
         data={posts}
         keyExtractor={(_, idx) => idx.toString()}
         renderItem={({ item }) => (
           <View>
+            <TouchableOpacity
+              style={styles.userContainer}
+              activeOpacity={0.7}
+              onPress={() => navigation.navigate("Profile")}
+            >
+              <View style={styles.avatarContainer}>
+                <Image
+                  style={styles.avatar}
+                  source={
+                    {
+                      uri: item.avatar,
+                    } ?? require("../../../assets/images/noavatar.jpg")
+                  }
+                />
+              </View>
+
+              <View>
+                <Text style={styles.userName}>{item.name}</Text>
+                <Text style={styles.userEmail}>{item.email}</Text>
+              </View>
+            </TouchableOpacity>
             <Image style={styles.postPhoto} source={{ uri: item.photo }} />
             <Text style={styles.postTitle}>{item.title}</Text>
             <View style={styles.postInfoContainer}>

@@ -48,8 +48,9 @@ export const RegistationScreen = ({ navigation }) => {
     return () => Dimensions?.removeEventListener("change", countWidchChange);
   }, []);
 
-  const handleSubmit = () => {
-    dispatch(register(formData));
+  const handleSubmit = async () => {
+    const avatar = await uploadAvatarToServer();
+    dispatch(register({ ...formData, avatar }));
     setFormData(initialState);
   };
   const handleChangeKeyboardFlag = () => {
@@ -67,7 +68,7 @@ export const RegistationScreen = ({ navigation }) => {
     const response = await fetch(avatar);
     console.log(avatar);
     const file = await response.blob();
-    const avatarId = uuid.v4();
+    const avatarId = new Date().toString();
     const storageRef = ref(storage, `avatar/${avatarId}`);
     await uploadBytes(storageRef, file);
     const avatarUrl = await getDownloadURL(ref(storage, `avatar/${avatarId}`));

@@ -12,7 +12,7 @@ export const register = createAsyncThunk(
   "auth/register",
   async (state, thunkAPI) => {
     try {
-      const { email, password, login } = state;
+      const { email, password, login, avatar } = state;
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, {
         displayName: login,
