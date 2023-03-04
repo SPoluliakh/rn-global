@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     marginTop: 157,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    height: "80%",
   },
   avatar: {
     width: 120,

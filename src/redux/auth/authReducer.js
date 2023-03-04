@@ -5,7 +5,7 @@ const initialState = {
   userId: null,
   name: null,
   email: null,
-  // avatar: null,
+  avatar: null,
   stateChange: false,
 };
 
@@ -19,7 +19,7 @@ export const authSlice = createSlice({
         state.userId = payload.uid;
         state.name = payload.displayName;
         state.email = payload.email;
-        // state.avatar = payload.photoURL;
+        state.avatar = payload.photoURL;
         state.stateChange = true;
       })
       .addCase(register.rejected, (state, _) => {
