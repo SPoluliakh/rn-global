@@ -10,11 +10,9 @@ import {
 import { SimpleLineIcons, FontAwesome } from "@expo/vector-icons";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/config";
-import { useSelector } from "react-redux";
 
 export const DefaultPostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  const { email, name, avatar } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const getAllPosts = async () => {
@@ -41,9 +39,11 @@ export const DefaultPostsScreen = ({ navigation }) => {
                 <Image
                   style={styles.avatar}
                   source={
-                    {
-                      uri: item.avatar,
-                    } ?? require("../../../assets/images/noavatar.jpg")
+                    item.avatar
+                      ? {
+                          uri: item.avatar,
+                        }
+                      : require("../../../assets/images/noavatar.jpg")
                   }
                 />
               </View>
